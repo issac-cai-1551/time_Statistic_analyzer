@@ -38,6 +38,12 @@
       "dist/**/*",
       "dist-electron/**/*"
     ],
+    "extraResources": [
+      {
+        "from": "../dist/api_server.exe",
+        "to": "api_server.exe"
+      }
+    ],
     "win": {
       "target": [
         "nsis"

@@ -96,7 +96,8 @@ npm run electron:build
 ```
 
 构建完成后，安装包将生成在 `frontend/dist_electron` 目录下。
-*注意：生产环境运行时，仍需确保后端服务已启动。*
+
+**注意**：构建后的程序已内置 Python 后端，**无需**手动运行 `uvicorn`。程序启动时会自动在后台加载 API 服务。
 
 ## 📖 使用指南
 

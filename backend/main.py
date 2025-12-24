@@ -279,3 +279,8 @@ def get_range_stats(
         "breakdown": category_stats,
         "daily_trend": daily_stats
     }
+
+if __name__ == "__main__":
+    import uvicorn
+    # Use 127.0.0.1 to avoid firewall prompts on some systems, and port 8000
+    uvicorn.run(app, host="127.0.0.1", port=8000)

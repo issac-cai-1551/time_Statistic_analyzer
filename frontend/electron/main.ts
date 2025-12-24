@@ -1,6 +1,7 @@
 import { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain } from 'electron'
 import path from 'path'
 import fs from 'fs'
+import { spawn, type ChildProcess } from 'child_process'
 
 // The built directory structure
 //
@@ -156,7 +157,50 @@ app.on('activate', () => {
   }
 })
 
+let backendProcess: ChildProcess | null = null
+
+function startBackend() {
+  const backendName = process.platform === 'win32' ? 'api_server.exe' : 'api_server'
+  // In production, extraResources are copied to resources/
+  const backendPath = app.isPackaged 
+    ? path.join(process.resourcesPath, backendName)
+    : path.join(__dirname, '../../dist', backendName) // Try to find it in dev too if built
+
+  if (fs.existsSync(backendPath)) {
+    console.log('Starting backend from:', backendPath)
+    backendProcess = spawn(backendPath, [], {
+      cwd: app.getPath('userData'), // Store DB in user data directory
+    })
+
+    backendProcess.stdout?.on('data', (data) => {
+      console.log(`Backend: ${data}`)
+    })
+    backendProcess.stderr?.on('data', (data) => {
+      console.error(`Backend Error: ${data}`)
+    })
+    
+    backendProcess.on('close', (code) => {
+      console.log(`Backend process exited with code ${code}`)
+    })
+  } else {
+    console.log('Backend executable not found, assuming manual start or dev mode.')
+  }
+}
+
+function stopBackend() {
+  if (backendProcess) {
+    console.log('Stopping backend...')
+    backendProcess.kill()
+    backendProcess = null
+  }
+}
+
+app.on('will-quit', () => {
+  stopBackend()
+})
+
 app.whenReady().then(() => {
+  startBackend()
   createWindow()
   createTray()
   createFloatWindow()
