@@ -1,10 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import TimerView from '../views/TimerView.vue';
 import TodayStatsView from '../views/TodayStatsView.vue';
 import CategoryManageView from '../views/CategoryManageView.vue';
+import FloatView from '../views/FloatView.vue';
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
@@ -20,6 +21,11 @@ const router = createRouter({
       path: '/categories',
       name: 'categories',
       component: CategoryManageView
+    },
+    {
+      path: '/float',
+      name: 'float',
+      component: FloatView
     }
   ]
 });

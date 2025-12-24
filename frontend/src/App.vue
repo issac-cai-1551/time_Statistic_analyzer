@@ -3,7 +3,11 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-  <header>
+  <!-- Only show header if NOT in float view. 
+       Actually, float view is a separate window loading /#/float.
+       But if we use the same App.vue, we need to hide header for /float route.
+  -->
+  <header v-if="$route.name !== 'float'">
     <nav>
       <RouterLink to="/">Timer</RouterLink>
       <RouterLink to="/stats">Stats</RouterLink>
@@ -11,7 +15,7 @@ import { RouterLink, RouterView } from 'vue-router'
     </nav>
   </header>
 
-  <main>
+  <main :class="{ 'float-mode': $route.name === 'float' }">
     <RouterView />
   </main>
 </template>
@@ -42,5 +46,14 @@ main {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+}
+
+main.float-mode {
+  padding: 0;
+  max-width: none;
+  height: 100vh;
+  width: 100vw;
+  background: transparent; /* Important for transparent window */
+  overflow: hidden;
 }
 </style>

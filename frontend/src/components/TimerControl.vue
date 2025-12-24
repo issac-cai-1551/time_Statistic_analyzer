@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useTimerStore } from '../stores/timerStore';
+import { useUIStore } from '../stores/uiStore';
+import { useCategoryStore } from '../stores/categoryStore';
 import CategorySelect from './CategorySelect.vue';
+import { ipcRenderer } from 'electron';
 
 const timerStore = useTimerStore();
+const uiStore = useUIStore();
+const categoryStore = useCategoryStore();
+
 const elapsedTime = ref('00:00:00');
 let intervalId: number | null = null;
 
@@ -31,7 +37,11 @@ const updateElapsedTime = () => {
 };
 
 onMounted(async () => {
-  await timerStore.fetchCurrentSession();
+  await Promise.all([
+    timerStore.fetchCurrentSession(),
+    categoryStore.fetchCategories()
+  ]);
+  
   if (timerStore.isRunning) {
     intervalId = setInterval(updateElapsedTime, 1000);
     updateElapsedTime();
@@ -52,6 +62,20 @@ watch(() => timerStore.isRunning, (isRunning) => {
   }
 });
 
+const currentCategory = computed(() => {
+  return categoryStore.getCategoryByKey(selectedCategory.value);
+});
+
+const toggleFloat = async () => {
+  try {
+    // This will hide main window and show float window
+    await ipcRenderer.invoke('toggle-mini-mode');
+    // We don't need to set uiStore.miniMode anymore because the window itself changes
+  } catch (e) {
+    console.error("Failed to toggle float mode", e);
+  }
+};
+
 const handleStart = async () => {
   await timerStore.start(selectedCategory.value || undefined);
 };
@@ -70,16 +94,21 @@ const handleCategoryChange = async (newKey: string) => {
 
 <template>
   <div class="timer-control">
-    <div class="time-display">{{ elapsedTime }}</div>
     
-    <div class="controls">
-      <CategorySelect 
-        :modelValue="selectedCategory" 
-        @update:modelValue="handleCategoryChange"
-      />
+    <!-- Normal Mode -->
+    <div class="normal-content">
+      <div class="time-display">{{ elapsedTime }}</div>
       
-      <button v-if="!timerStore.isRunning" @click="handleStart" class="btn start">Start</button>
-      <button v-else @click="handleStop" class="btn stop">Stop</button>
+      <div class="controls">
+        <CategorySelect 
+          :modelValue="selectedCategory" 
+          @update:modelValue="handleCategoryChange"
+        />
+        
+        <button v-if="!timerStore.isRunning" @click="handleStart" class="btn start">Start</button>
+        <button v-else @click="handleStop" class="btn stop">Stop</button>
+        <button @click="toggleFloat" class="btn float">Float</button>
+      </div>
     </div>
   </div>
 </template>
@@ -94,6 +123,14 @@ const handleCategoryChange = async (newKey: string) => {
   border: 1px solid #eee;
   border-radius: 8px;
   background: #36628b;
+}
+
+.normal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
 }
 
 .time-display {
@@ -124,5 +161,9 @@ const handleCategoryChange = async (newKey: string) => {
 
 .stop {
   background-color: #f44336;
+}
+
+.float {
+  background-color: #2196f3;
 }
 </style>
