@@ -3,6 +3,9 @@ import path from 'path'
 import fs from 'fs'
 import { spawn, type ChildProcess } from 'child_process'
 
+// Disable hardware acceleration to prevent GPU process crashes
+app.disableHardwareAcceleration()
+
 // The built directory structure
 //
 // ├─┬─ dist

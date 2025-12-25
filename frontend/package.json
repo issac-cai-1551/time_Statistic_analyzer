@@ -1,7 +1,9 @@
 {
-  "name": "frontend",
+  "name": "time-statistic-analyzer",
   "private": true,
   "version": "0.0.0",
+  "description": "A personal time tracker application",
+  "author": "User",
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
@@ -30,7 +32,7 @@
   },
   "build": {
     "appId": "com.time-statistic-analyzer.app",
-    "productName": "Time Statistic Analyzer",
+    "productName": "TimeStatisticAnalyzer",
     "directories": {
       "output": "dist_electron"
     },
@@ -47,7 +49,14 @@
     "win": {
       "target": [
         "nsis"
-      ]
+      ],
+      "forceCodeSigning": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
     }
   }
 }
