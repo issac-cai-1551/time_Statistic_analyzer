@@ -22,6 +22,10 @@ const currentCategory = computed(() => {
 });
 
 const bgColor = computed(() => {
+  // If category is explicitly 'uncategorized', use default style
+  if (currentCategory.value?.key === 'uncategorized') {
+    return '#36628b';
+  }
   return currentCategory.value?.color || '#36628b';
 });
 

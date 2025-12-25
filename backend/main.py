@@ -111,14 +111,17 @@ def start_timer(session_data: Optional[TimerSessionCreate] = None, session: Sess
     
     # Validate category_key if provided
     if category_key:
-        statement = select(Category).where(Category.key == category_key)
-        category = session.exec(statement).first()
-        
-        if not category:
-            raise HTTPException(status_code=404, detail=f"Category with key '{category_key}' not found")
-        
-        if not category.is_active:
-             raise HTTPException(status_code=400, detail=f"Category '{category_key}' is inactive")
+        if category_key == "uncategorized" or category_key == "":
+            category_key = None
+        else:
+            statement = select(Category).where(Category.key == category_key)
+            category = session.exec(statement).first()
+            
+            if not category:
+                raise HTTPException(status_code=404, detail=f"Category with key '{category_key}' not found")
+            
+            if not category.is_active:
+                 raise HTTPException(status_code=400, detail=f"Category '{category_key}' is inactive")
 
     # Create new session in memory
     current_session = TimerSession(category_key=category_key, start_time=datetime.now())
@@ -134,12 +137,15 @@ def update_current_session(session_data: TimerSessionUpdate, session: Session = 
         
     # Validate category if provided
     if session_data.category_key is not None:
-        statement = select(Category).where(Category.key == session_data.category_key)
-        category = session.exec(statement).first()
-        if not category:
-            raise HTTPException(status_code=404, detail=f"Category '{session_data.category_key}' not found")
-        if not category.is_active:
-             raise HTTPException(status_code=400, detail=f"Category '{session_data.category_key}' is inactive")
+        if session_data.category_key == "uncategorized" or session_data.category_key == "":
+            session_data.category_key = None
+        else:
+            statement = select(Category).where(Category.key == session_data.category_key)
+            category = session.exec(statement).first()
+            if not category:
+                raise HTTPException(status_code=404, detail=f"Category '{session_data.category_key}' not found")
+            if not category.is_active:
+                 raise HTTPException(status_code=400, detail=f"Category '{session_data.category_key}' is inactive")
             
     # Update category
     current_session.category_key = session_data.category_key

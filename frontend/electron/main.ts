@@ -234,4 +234,11 @@ app.whenReady().then(() => {
       w.webContents.send('timer-update')
     })
   })
+
+  // Broadcast category changes to all windows
+  ipcMain.on('category-change', () => {
+    BrowserWindow.getAllWindows().forEach(w => {
+      w.webContents.send('category-update')
+    })
+  })
 })

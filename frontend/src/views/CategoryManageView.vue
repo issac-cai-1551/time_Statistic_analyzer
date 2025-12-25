@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { getCategories, createCategory, deleteCategory, updateCategory, type Category } from '../api/category';
+import { ipcRenderer } from 'electron';
 
 const categories = ref<Category[]>([]);
 const newCategory = ref({ key: '', name: '', color: '#000000' });
@@ -29,6 +30,7 @@ const handleCreate = async () => {
     await createCategory(newCategory.value);
     newCategory.value = { key: '', name: '', color: '#000000' };
     await fetchCategories();
+    ipcRenderer.send('category-change');
   } catch (e) {
     alert('Failed to create category (Key might be duplicate)');
   }
@@ -38,6 +40,7 @@ const handleDelete = async (id: number) => {
   if (!confirm('Are you sure you want to deactivate this category?')) return;
   await deleteCategory(id);
   await fetchCategories();
+  ipcRenderer.send('category-change');
 };
 
 const startEdit = (cat: Category) => {
@@ -54,6 +57,7 @@ const handleUpdate = async (id: number) => {
     await updateCategory(id, editForm.value);
     editingId.value = null;
     await fetchCategories();
+    ipcRenderer.send('category-change');
   } catch (e) {
     alert('Failed to update category');
   }

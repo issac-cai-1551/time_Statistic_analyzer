@@ -1,5 +1,27 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import { onMounted, onUnmounted } from 'vue';
+import { ipcRenderer } from 'electron';
+import { useCategoryStore } from './stores/categoryStore';
+import { useTimerStore } from './stores/timerStore';
+
+const categoryStore = useCategoryStore();
+const timerStore = useTimerStore();
+
+onMounted(() => {
+  ipcRenderer.on('category-update', () => {
+    categoryStore.fetchCategories(true);
+  });
+  
+  ipcRenderer.on('timer-update', () => {
+    timerStore.fetchCurrentSession();
+  });
+});
+
+onUnmounted(() => {
+  ipcRenderer.removeAllListeners('category-update');
+  ipcRenderer.removeAllListeners('timer-update');
+});
 </script>
 
 <template>
