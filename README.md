@@ -175,6 +175,3 @@ MIT
 ## License
 
 MIT
-
-## LLM的使用感想
-
