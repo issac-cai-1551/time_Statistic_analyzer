@@ -7,19 +7,25 @@ Time Statistic Analyzer 是一个基于 Electron + Vue 3 + FastAPI 的全栈个�
 ## ✨ 功能特性
 
 **⏱️ 精准计时**: 支持任务的开始、暂停和停止，实时显示已用时间。
+
 **🔮 桌面悬浮球**:
     - 提供极简的桌面悬浮球模式 (Always on Top)。
     - 支持任意拖拽移动。
     - 显示当前任务颜色和时长（未分类任务显示默认蓝色）。
     - 快速控制：一键开始/停止，双击或点击还原按钮返回主界面。
+
 **实时同步**：主界面修改分类或计时状态，悬浮球即时更新。
+
 **🏷️ 分类管理**:
     -   自定义任务分类，支持设置名称和专属颜色。
     -   支持逻辑删除（归档）不再使用的分类。
+
 **📊 数据可视化**:
     -   **今日统计**: 通过 ECharts 饼图展示今日时间分布。
     -   **时间轴**: 清晰展示全天的时间段记录。
+
 **💾 本地存储**: 后端采用 SQLite 数据库 (`time_tracker_v2.db`)，数据安全存储在本地。
+
 **📦 便携/安装**: 提供免安装绿色版和标准安装包，开箱即用。
 
 ## 🛠️ 技术栈
@@ -27,28 +33,42 @@ Time Statistic Analyzer 是一个基于 Electron + Vue 3 + FastAPI 的全栈个�
 ### Frontend (桌面客户端)
 
 **Framework**: [Electron](https://www.electronjs.org/) (v39+)
+
 **UI Library**: [Vue 3](https://vuejs.org/) + TypeScript
+
 **Build Tool**: [Vite](https://vitejs.dev/)
+
 **State Management**: [Pinia](https://pinia.vuejs.org/)
+
 **Visualization**: [ECharts](https://echarts.apache.org/)
+
 **Packaging**: [electron-builder](https://www.electron.build/)
 
 ### Backend (API 服务)
 
 **Runtime**: Python 3.13+
+
 **Web Framework**: [FastAPI](https://fastapi.tiangolo.com/)
+
 **ORM**: [SQLModel](https://sqlmodel.tiangolo.com/)
+
 **Database**: SQLite
+
 **Packaging**: [PyInstaller](https://pyinstaller.org/)
 
 ## 🚀 开发与运行
 
 ### ⚠️ 注意事项 (Ignored Files)
+
 本项目为了保持仓库轻量，**忽略**了以下文件，请在运行前根据指引自行生成或下载：
-1.  **依赖库**: `node_modules` 和 `.venv` (需安装依赖)。
-2.  **后端程序**: `dist/api_server.exe` (需手动构建)。
-3.  **构建资源**: `frontend/build/icon.png` (构建安装包时需要)。
-4.  **数据库**: `time_tracker_v2.db` (运行时自动生成)。
+
+1. **依赖库**: `node_modules` 和 `.venv` (需安装依赖)。
+
+2. **后端程序**: `dist/api_server.exe` (需手动构建)。
+
+3. **构建资源**: `frontend/build/icon.png` (构建安装包时需要)。
+
+4. **数据库**: `time_tracker_v2.db` (运行时自动生成)。
 
 ### 前置要求
 
@@ -108,6 +128,7 @@ npm run electron:build
 ```
 
 **绿色版 (Portable)**: `frontend/dist_electron/win-unpacked/TimeStatisticAnalyzer.exe`
+
 **安装包 (Setup)**: `frontend/dist_electron/TimeStatisticAnalyzer Setup X.X.X.exe`
 
 > **注意**: 构建后的程序会自动管理后端进程，**无需**手动运行 Python 服务。
@@ -150,6 +171,10 @@ MIT
     4. 点击 **⤢** 按钮或双击悬浮球可还原主窗口。
 4. **查看统计**:
     1. 点击导航栏的 **Stats** 进入统计页面，查看今日的时间分配饼图和详细时间轴。
+
+![alt text](./exhibit/image.png)
+![alt text](./exhibit/image-1.png)
+![alt text](./exhibit/image-2.png)
 
 ## 📂 目录结构
 
