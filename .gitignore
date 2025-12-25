@@ -5,6 +5,16 @@ build/
 dist/
 wheels/
 *.egg-info
+*.spec
+
+# Database
+*.db
 
 # Virtual environments
 .venv
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
